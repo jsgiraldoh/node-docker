@@ -1,0 +1,54 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: node
+  labels:
+    app: node
+spec:
+  type: ClusterIP
+  selector:
+    app: node
+  ports:
+    - port: 8000
+      protocol: TCP
+      targetPort: node
+    - port: 9229
+      protocol: TCP
+      targetPort: node
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: node
+  labels:
+    app: node
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: node
+  template:
+    metadata:
+      labels:
+        app: node
+    spec:
+      containers:
+        - name: node
+          image: jsgiraldoh/node-docker
+          ports:
+          - containerPort: 8000
+          - containerPort: 9229
+          command:
+            - npm run debug
+          env:
+            - name: SERVER_PORT
+              value: "8000"
+            - name: CONNECTIONSTRING
+              value: "mongodb://mongo:27017/notes"
+          volumeMounts:
+            - name: volume-02
+              mountPath: /app
+      volumes:
+        - name: volume-01
+          persistentVolumeClaim:
+            claimName: pv-claim-02
