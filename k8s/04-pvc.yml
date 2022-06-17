@@ -2,11 +2,10 @@ apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
   name: pv-claim-01
-  namespace: node-mongo
+  #namespace: node-mongo
   labels:
     app: volume-01
 spec:
-  storageClassName: ""
   accessModes:
     - ReadWriteOnce
   resources:

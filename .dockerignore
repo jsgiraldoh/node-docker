@@ -1,0 +1,9 @@
+k8s/
+node_modules/
+.dockerignore
+.git
+.gitignore
+.DS_Store
+docker-compose.yml
+Dockerfile
+README.md

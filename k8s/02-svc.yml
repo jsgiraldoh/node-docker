@@ -9,8 +9,7 @@ spec:
   selector:
     app: mongo
   ports:
-    - name: "27017"
-      port: 27017
+    - port: 27017
       protocol: TCP
       targetPort: mongo
 ---
@@ -31,15 +30,13 @@ spec:
         app: mongo
     spec:
       containers:
-        - image: mongo:4.2.8
-          name: mongo
+        - name: mongo
+          image: mongo:4.2.8
           ports:
-            - containerPort: 27017
-          resources: {}
+          - containerPort: 27017
           volumeMounts:
             - name: volume-01
               mountPath: /data
-          restartPolicy: Always
       volumes:
         - name: volume-01
           persistentVolumeClaim:

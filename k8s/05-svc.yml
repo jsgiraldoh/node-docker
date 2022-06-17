@@ -1,13 +1,14 @@
+---
 apiVersion: v1
 kind: Service
 metadata:
-  name: node
+  name: service-node
   labels:
-    app: node
+    name: node
 spec:
   type: ClusterIP
   selector:
-    app: node
+    name: node
   ports:
     - name: "8000"
       port: 8000
@@ -19,29 +20,27 @@ spec:
       targetPort: node
 status:
   loadBalancer: {}
----
+---  
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: node
+  name: deploy-node
   labels:
-    app: node
+    name: node
 spec:
   replicas: 2
   selector:
     matchLabels:
-      app: node
+      name: node
+  strategy:
+    type: RollingUpdate
   template:
     metadata:
       labels:
-        app: node
+        name: node
     spec:
       containers:
-        - args:
-            - npm
-            - run
-            - debug
-          env:
+        - env:
             - name: CONNECTIONSTRING
               value: mongodb://mongo:27017/notes
             - name: SERVER_PORT
@@ -52,10 +51,3 @@ spec:
             - containerPort: 8000
             - containerPort: 9229
           resources: {}
-          volumeMounts:
-            - name: volume-02
-              mountPath: /app
-      volumes:
-        - name: volume-02
-          persistentVolumeClaim:
-            claimName: pv-claim-02

@@ -9,11 +9,9 @@ spec:
   storageClassName: ""
   claimRef:
     name: pv-claim-01
-    namespace: node-mongo
   capacity:
     storage: 5Gi
   accessModes:
     - ReadWriteOnce
-  persistentVolumeReclaimPolicy: Retain
   hostPath:
     path: "/tmp/pv-volume-01"
