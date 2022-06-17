@@ -9,12 +9,16 @@ spec:
   selector:
     app: node
   ports:
-    - port: 8000
+    - name: "8000"
+      port: 8000
       protocol: TCP
       targetPort: node
-    - port: 9229
+    - name: "9229"
+      port: 9229
       protocol: TCP
       targetPort: node
+status:
+  loadBalancer: {}
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -33,22 +37,25 @@ spec:
         app: node
     spec:
       containers:
-        - name: node
-          image: jsgiraldoh/node-docker
-          ports:
-          - containerPort: 8000
-          - containerPort: 9229
-          command:
-            - npm run debug
+        - args:
+            - npm
+            - run
+            - debug
           env:
+            - name: CONNECTIONSTRING
+              value: mongodb://mongo:27017/notes
             - name: SERVER_PORT
               value: "8000"
-            - name: CONNECTIONSTRING
-              value: "mongodb://mongo:27017/notes"
+          image: jsgiraldoh/node-docker
+          name: node
+          ports:
+            - containerPort: 8000
+            - containerPort: 9229
+          resources: {}
           volumeMounts:
             - name: volume-02
               mountPath: /app
       volumes:
-        - name: volume-01
+        - name: volume-02
           persistentVolumeClaim:
             claimName: pv-claim-02
