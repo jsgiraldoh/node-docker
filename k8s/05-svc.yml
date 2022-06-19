@@ -6,22 +6,20 @@ metadata:
   namespace: node-mongo
   labels:
     name: node
+  annotations:
+    service.beta.kubernetes.io/aws-load-balancer-type: external
+    service.beta.kubernetes.io/aws-load-balancer-nlb-target-type: ip
+    service.beta.kubernetes.io/aws-load-balancer-scheme: internet-facing
 spec:
-  type: ClusterIP
+  type: LoadBalancer
   selector:
     name: node
   ports:
-    - name: "8000"
-      port: 8000
+    - name: http
+      port: 3000
       protocol: TCP
-      targetPort: node
-    - name: "9229"
-      port: 9229
-      protocol: TCP
-      targetPort: node
-status:
-  loadBalancer: {}
----  
+      targetPort: 3000
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -46,10 +44,13 @@ spec:
             - name: CONNECTIONSTRING
               value: mongodb://mongo:27017/notes
             - name: SERVER_PORT
-              value: "8000"
-          image: jsgiraldoh/node-docker
+              value: "3000"
+          image: pedrodotmc/unir-containers-activity3-node-mongo:1.0.0
           name: node
           ports:
-            - containerPort: 8000
+            - containerPort: 3000
             - containerPort: 9229
-          resources: {}
+          resources:
+            limits:
+              cpu: 200m
+              memory: 200Mi

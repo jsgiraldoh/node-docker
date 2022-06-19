@@ -1,0 +1,7 @@
+---
+resources:
+  - 01-ns.yml
+  - 02-svc.yml
+  - 03-pv.yml
+  - 04-pvc.yml
+  - 05-svc.yml
