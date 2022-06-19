@@ -13,16 +13,17 @@ spec:
   ports:
     - port: 27017
       protocol: TCP
-      targetPort: mongo
+      targetPort: 27017
 ---
 apiVersion: apps/v1
-kind: Deployment
+kind: StatefulSet
 metadata:
   name: mongo
   namespace: node-mongo
   labels:
     app: mongo
 spec:
+  serviceName: mongo
   replicas: 1
   selector:
     matchLabels:
@@ -36,10 +37,14 @@ spec:
         - name: mongo
           image: mongo:4.2.8
           ports:
-          - containerPort: 27017
+            - containerPort: 27017
           volumeMounts:
             - name: volume-01
               mountPath: /data
+          resources:
+            limits:
+              cpu: 1
+              memory: 500Mi
       volumes:
         - name: volume-01
           persistentVolumeClaim:

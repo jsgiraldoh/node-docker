@@ -6,8 +6,9 @@ metadata:
   labels:
     app: volume-01
 spec:
+  volumeName: pv-volume-01
   accessModes:
     - ReadWriteOnce
   resources:
     requests:
-      storage: 3Gi
+      storage: 1Gi

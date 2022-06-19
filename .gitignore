@@ -3,3 +3,8 @@
 
 ## NODE ##
 node_modules/
+
+## TERRAFORM ##
+infrastructure/.terraform
+infrastructure/.env
+infrastructure/terraform.tfstate*
